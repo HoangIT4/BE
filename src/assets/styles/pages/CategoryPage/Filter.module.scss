@@ -1,0 +1,138 @@
+.filter-title {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.button-container {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 14px;
+  z-index: 50;
+  position: relative;
+  
+  @media (max-width: 576px) {
+    gap: 22px;
+  }
+}
+
+.circle-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 60px;
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding-left: 18px;
+}
+
+.circle-button-2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 60px;
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.circle-button.active,
+.circle-button.active:hover {
+  background-color: bisque; /* Màu nền khi thẻ được chọn */
+}
+
+.circle-button:hover,
+.circle-button-2:hover {
+  background-color: #e0e0e0;
+}
+
+.circle-button span {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.circle-button i {
+  font-size: 24px;
+}
+
+.icon-active {
+  transform: rotate(0deg); /* Đặt mặc định là không xoay */
+  transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển tiếp */
+}
+
+/* Thêm lớp này cho trạng thái "active" để xoay theo chiều kim đồng hồ */
+.active .icon-active {
+  transform: rotate(180deg); /* Xoay theo chiều kim đồng hồ */
+}
+
+.button-container-2 {
+  padding-bottom: 10px;
+  display: flex;
+  gap: 16px;
+  overflow: hidden; /* Ẩn nội dung thừa */
+  transition: max-height 0.3s ease, transform 0.3s ease; /* Thêm hiệu ứng chuyển tiếp cho max-height và transform */
+  max-height: 0; /* Chiều cao tối đa ban đầu */
+  transform: translateY(-20px); /* Đẩy hộp thoại lên một chút ban đầu */
+}
+
+.button-container-2.active {
+  max-height: 500px; /* Chiều cao tối đa khi mở */
+  transform: translateY(0); /* Trở về vị trí ban đầu */
+}
+
+.circle-button-2 span {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.option-active,
+.option-active:hover {
+  background-color: bisque; /* Màu nền khi thẻ được chọn */
+}
+
+.selected-options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 20px;
+  position: relative;
+
+  span {
+    margin-right: 8px;
+  }
+
+  i.remove-icon {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  i.remove-icon:hover {
+    background-color: #ff1a1a; /* Màu đỏ đậm hơn khi hover */
+  }
+}

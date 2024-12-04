@@ -1,0 +1,32 @@
+.faq-container {
+  width: 100%;
+  min-width: 300px;
+  padding: 20px;
+}
+
+:global {
+  .accordion {
+    --bs-accordion-btn-focus-box-shadow: none;
+    --bs-accordion-active-bg: #EFDBD4E5;
+  }
+}
+
+.faq-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.acco-container {
+  border-radius: 15px;
+}
+
+.faq-header {
+  font-weight: bold;
+}
+
+.faq-body {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+}

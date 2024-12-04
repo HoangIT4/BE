@@ -1,0 +1,68 @@
+
+/* Toàn bộ container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+.modal-backdrop {
+  z-index: 1400 !important;
+}
+
+.modal {
+  z-index: 1500 !important;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  transition: width 0.3s ease;
+  max-height: 100vh;
+  position: sticky; /* Giữ sidebar cố định */
+  top: 0; /* Dính vào đầu khi cuộn */
+  overflow-y: auto; /* Cho phép sidebar cuộn riêng */
+  background-color: #f0f0f0; /* Đặt màu nền nếu cần */
+  flex-shrink: 0; /* Giữ sidebar cố định không bị co lại */
+}
+
+.sidebar-closed .sidebar {
+  width: 0; /* Sidebar sẽ ẩn hoàn toàn */
+}
+
+/* Main content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+  overflow-y: auto; /* Cho phép cuộn nội dung */
+  margin-top: 59px;
+}
+
+/* Khi sidebar mở, thêm margin-left cho nội dung */
+.sidebar-open .main-content {
+  margin-left: 240px;
+}
+
+/* Khi sidebar đóng, margin sẽ bằng 0 */
+.sidebar-closed .main-content {
+  margin-left: 0;
+}
+
+/* Header */
+.header {
+  background-color: #9ac7f5;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  flex-shrink: 0; /* Đảm bảo header không bị co */
+}
+
+/* Nội dung */
+.content {
+  padding: 20px;
+  background-color: #f9fafb;
+  flex-grow: 1; /* Cho phép content chiếm hết không gian còn lại */
+}

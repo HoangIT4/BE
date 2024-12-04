@@ -1,0 +1,117 @@
+.slider-container {
+  width: 100%;
+  height: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 150px 64px;
+  backdrop-filter: blur(150px);
+  opacity: 0.9;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(241, 132, 112, 0.6) 30%, rgba(238, 204, 167, 0.7) 69.83%, rgba(239, 219, 212, 0.9) 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.slider-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #555555;
+}
+
+.slick-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.1s ease; /* Chuyển đổi mượt mà cho slide */
+}
+
+.slide {
+  padding: 10px;
+  outline: none;
+  transition: transform 0.2s ease; /* Chuyển đổi mượt mà cho slide */
+}
+
+.slide-content {
+  height: 150px;
+  background: #FFFFFF80; /* Màu trắng với độ trong suốt 50% */
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555555;
+  transition: all 0.2s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  
+  /* Căn giữa nội dung theo cả chiều ngang và chiều dọc */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide-content:hover {
+  cursor: pointer;
+}
+
+.slick-dots li button:before {
+  color: #888;
+}
+
+.slick-dots li.slick-active button:before {
+  color: white;
+}
+
+.arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color:  white;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: #FFDAD2; /* Nền cho mũi tên */
+  border-radius: 50%;
+  border-color: #ffffff;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.2s ease;
+}
+
+.arrow:hover {
+  background-color: #151414; /* Nền mũi tên khi hover */
+}
+
+.next {
+  right: -50px;
+}
+
+.prev {
+  left: -50px;
+}
+
+@media screen and (max-width: 600px) {
+  .slider-title {
+    font-size: 1.2rem; /* Giảm kích thước font cho tiêu đề trên màn hình nhỏ */
+  }
+  
+  .slide.active {
+    transform: scale(1); /* Đặt kích thước slide ở giữa về bình thường trên màn hình nhỏ */
+  }
+  
+  .slide {
+    /* Có thể thêm kiểu cho slide trên màn hình nhỏ nếu cần */
+    transform: scale(1); /* Đảm bảo rằng tất cả các slide đều có kích thước bình thường */
+  }
+}
+
+
+.active {
+  transform: scale(1.1); /* Phóng to slide ở giữa */
+  z-index: 1; /* Đảm bảo slide ở giữa nằm trên cùng */
+}
+
+.slide:not(.active) {
+  transform: scale(0.85); /* Thu nhỏ các slide không phải là slide chính */
+}

@@ -1,0 +1,17 @@
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.menuBtn{
+    color: #FFF;
+    font-size: 26px;
+    
+}
+
+.menuBtn:hover{
+    cursor: pointer;
+}

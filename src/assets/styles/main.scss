@@ -1,0 +1,9 @@
+// import tất các file styles và rồi sau đó import file main.scss là sử dụng đc cho đỡ phải import từng cái
+
+
+@use './variables.module.scss';
+@use './mixin.module.scss' as*;
+@use './global.module.scss' as *;
+@use './pages/ExtendPage/ErrorPage.scss';
+@use './components/loader.scss';
+@use 'normalize.css' as*;
