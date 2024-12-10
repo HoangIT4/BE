@@ -15,26 +15,26 @@ const Dashboard = () => {
       
       <Row className="mt-4 justify-content-between">
         <Col xs={12} sm={6} lg={3} className="mb-4">
-          <CustomCard title="Box 1" text="Content for Box 1" />
+          <CustomCard title="Today Orders" text="400.000 đ" />
         </Col>
 
         <Col xs={12} sm={6} lg={3} className="mb-4">
-          <CustomCard title="Box 2" text="Content for Box 2" />
+          <CustomCard title="This Month" text="400.000 đ" />
         </Col>
 
         <Col xs={12} sm={6} lg={3} className="mb-4">
-          <CustomCard title="Box 3" text="Content for Box 3" />
+          <CustomCard title="Order Pending" text="200" />
         </Col>
 
         <Col xs={12} sm={6} lg={3} className="mb-4">
-          <CustomCard title="Box 4" text="Content for Box 4" />
+          <CustomCard title="Order Deliverd" text="2" />
         </Col>
       </Row>
 
       <Row>
         <Col>
           <div>
-            <h2>Thống kê (tuần trước)</h2>
+            <h2>Thống kê (tuần này)</h2>
             <OrderChart />
           </div>
         </Col>
@@ -47,14 +47,14 @@ const Dashboard = () => {
           </div>
         </Col>
       </Row>
-      <Row>
+      {/* <Row>
         <Col>
           <div>
             <h2>Thống kê (tuần trước)</h2>
             <OrderChart3 />
           </div>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 };

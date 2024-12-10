@@ -9,41 +9,61 @@ const DetailModal = ({ show, onClose, selectedProduct }) => {
       <Modal.Header closeButton>
         <Modal.Title className={styles.modalTitle}>Product Details</Modal.Title>
       </Modal.Header>
+        
       <Modal.Body style={{ maxHeight: "70vh", overflowY: "auto" }}>
         {selectedProduct ? (
-          <div className={styles.productDetails}>
+          <>
+            {/* Hình ảnh sản phẩm */}
+            <div className="text-center mb-4">
+              {/* Ảnh chính */}
+              <img 
+                src={selectedProduct.src} 
+                alt={selectedProduct.name} 
+                style={{ maxWidth: "100%", height: "auto", borderRadius: "10px" }} 
+              />
+
+              {/* Ảnh phụ */}
+              <div className="mt-3">
+                <img 
+                  src={selectedProduct.preImg} 
+                  alt={`${selectedProduct.name} - Thumbnail`} 
+                  style={{ maxWidth: "150px", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} 
+                />
+              </div>
+            </div>
+
+            {/* Thông tin cơ bản */}
             <Row className="mb-4">
               <Col xs={12} md={6}>
-                <p className={styles.detailItem}><strong>ID:</strong> {selectedProduct.id}</p>
-                <p className={styles.detailItem}><strong>Name:</strong> {selectedProduct.name}</p>
+                <p><strong>ID:</strong> {selectedProduct.productID}</p>
+                <p><strong>Name:</strong> {selectedProduct.name}</p>
+                <p><strong>Brand:</strong> {selectedProduct.brands?.brandName || "Unknown"}</p>
               </Col>
               <Col xs={12} md={6}>
-                <p className={styles.detailItem}><strong>Brand:</strong> {selectedProduct.brand.name}</p>
+                <p><strong>Price:</strong> {selectedProduct.price.toLocaleString()} đ</p>
+                <p><strong>Stock:</strong> {selectedProduct.stock}</p>
+                <p><strong>Rating:</strong> {selectedProduct.rating || 0} / 5</p>
               </Col>
             </Row>
-            
-            <h5 className={styles.variantTitle}>Variants:</h5>
-            {selectedProduct.variants.map((variant, idx) => (
-              <div key={idx} className={styles.variant}>
-                <Row className="align-items-center">
-                  <Col xs={12}>
-                    <p className={styles.variantColor}><strong>Color:</strong> {variant.color}</p>
-                  </Col>
-                </Row>
-                <Row>
-                  {Object.keys(variant.sizes).map((sizeKey) => (
-                    <Col xs={12} md={6} key={sizeKey} className={styles.sizeInfo}>
-                      <div className={styles.sizeDetails}>
-                        <p><strong>Size:</strong> {sizeKey.toUpperCase()}</p>
-                        <p><strong>Price:</strong> ${variant.sizes[sizeKey].price}</p>
-                        <p><strong>Rental Price:</strong> ${variant.sizes[sizeKey].rental}</p>
-                      </div>
-                    </Col>
+
+            {/* Mô tả sản phẩm */}
+            <div className="mb-4">
+              <h5>Description</h5>
+              <p>{selectedProduct.detailDes}</p>
+            </div>
+
+            {/* Categories (nếu có) */}
+            {selectedProduct.categories && (
+              <div>
+                <h5>Categories</h5>
+                <ul>
+                  {selectedProduct.categories.map((cat, index) => (
+                    <li key={index}>{cat.categoryName}</li>
                   ))}
-                </Row>
+                </ul>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <p>No product details available.</p>
         )}
@@ -54,6 +74,7 @@ const DetailModal = ({ show, onClose, selectedProduct }) => {
         </Button>
       </Modal.Footer>
     </Modal>
+
   );
 };
 

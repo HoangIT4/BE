@@ -3,6 +3,16 @@ import { Nav } from "react-bootstrap";
 import styles from "../../assets/styles/components/AdminPage/Sidebar.module.scss";
 import logo from "../../assets/image/logo.png";
 
+const menuItems = [
+  { path: '/admin', icon: 'bx-home-alt', text: 'Dashboard' },
+  { path: '/admin/product', icon: 'bx-package', text: 'Products' },
+  { path: '/admin/order', icon: 'bx-receipt', text: 'Orders' },
+  { path: '/admin/user', icon: 'bx-user', text: 'Customer' },
+  { path: '/admin/coupon', icon: 'bx-gift', text: 'Coupon'},
+  // { path: '/admin/statistic', icon: 'bx-chart', text: 'Statistic' },
+  { path: '/admin/setting', icon: 'bx-cog', text: 'Settings' },
+];
+
 const SidebarAdmin = ({ onMenuItemClick }) => {
   useEffect(() => {
     const body = document.querySelector("body"),
@@ -40,47 +50,21 @@ const SidebarAdmin = ({ onMenuItemClick }) => {
 
       <div className={styles["menu-bar"]}>
         <div className={styles["menu"]}>
-          
           <ul className={styles["menu-links"]}>
-            <li
-              className={styles["nav-link"]}
-              role="button"
-              tabIndex={0}
-              onClick={() => onMenuItemClick('/admin')}
-            >
-              <div className={styles["nav-link-container"]}>
-                <i className={`bx bx-home-alt ${styles.icon}`}></i>
-                <span className={styles["nav-text"]}>Dashboard</span>
-              </div>
-            </li>
-          </ul>
-
-          <ul className={styles["menu-links"]}>
-            <li
-              className={styles["nav-link"]}
-              role="button"
-              tabIndex={0}
-              onClick={() => onMenuItemClick('/admin/product')}
-            >
-              <div className={styles["nav-link-container"]}>
-                <i className={`bx bx-package ${styles.icon}`}></i>
-                <span className={styles["nav-text"]}>Products</span>
-              </div>
-            </li>
-          </ul>
-
-          <ul className={styles["menu-links"]}>
-            <li
-              className={styles["nav-link"]}
-              role="button"
-              tabIndex={0}
-              onClick={() => onMenuItemClick('/admin/order')}
-            >
-              <div className={styles["nav-link-container"]}>
-                <i className={`bx bx-receipt ${styles.icon}`}></i>
-                <span className={styles["nav-text"]}>Orders</span>
-              </div>
-            </li>
+            {menuItems.map((item, index) => (
+              <li
+                key={index}
+                className={styles["nav-link"]}
+                role="button"
+                tabIndex={0}
+                onClick={() => onMenuItemClick(item.path)}
+              >
+                <div className={styles["nav-link-container"]}>
+                  <i className={`bx ${item.icon} ${styles.icon}`}></i>
+                  <span className={styles["nav-text"]}>{item.text}</span>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -91,18 +75,6 @@ const SidebarAdmin = ({ onMenuItemClick }) => {
               <span className={`${styles.text} ${styles["nav-text"]}`}>Logout</span>
             </a>
           </li>
-
-          {/* <li className={styles.mode}>
-            <div className={styles["moon-sun"]}>
-              <i className={`bx bx-moon ${styles.icon} ${styles.moon}`}></i>
-              <i className={`bx bx-sun ${styles.icon} ${styles.sun}`}></i>
-            </div>
-            <span className={`${styles["mode-text"]} ${styles.text}`}>Dark Mode</span>
-
-            <div className={styles["toggle-switch"]}>
-              <span className={styles.switch}></span>
-            </div>
-          </li> */}
         </div>
       </div>
     </Nav>

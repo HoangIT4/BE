@@ -21,8 +21,10 @@ const OrderChart = () => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="purchases" fill="#8884d8" name="Lượt mua" />
+        <Bar dataKey="purchases" fill="#8884d8" name="Order" />
+        {/* <Bar dataKey="rentals" fill="#82ca9d" name="Lượt thuê" />
         <Bar dataKey="rentals" fill="#82ca9d" name="Lượt thuê" />
+        <Bar dataKey="rentals" fill="#82cv9d" name="Lượt thuê" /> */}
       </BarChart>
     </ResponsiveContainer>
   );

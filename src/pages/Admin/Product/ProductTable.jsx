@@ -11,14 +11,33 @@ import DetailModal from './DetailModal';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {getProducts} from '@/apis/productsService';
+import {deleteProduct} from '@/apis/productsService';
+import {getProductById} from '@/apis/productsService';
 
 const ProductTable = () => {
-  const [data, setData] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
+
+
+const [listProducts,setListProducts] = useState([]);
+const [selectedProduct, setSelectedProduct] = useState(null);
+const [showDetailModal, setShowDetailModal] = useState(false);
+
+useEffect(() => {
+  getProducts().then((res) => {
+
+    
+  setListProducts(res.data);
+  });
+
+}, []);
+
+
   
-  const handleShowDetail = (product) => {
-    setSelectedProduct(product);
+  const handleShowDetail = async (productID) => {
+    const productData = await getProductById(productID);
+
+    
+    setSelectedProduct(productData);
     setShowDetailModal(true);
   };
   
@@ -30,72 +49,51 @@ const ProductTable = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleCloseDelete = () => setShowDeleteModal(false);
   const handleShowDelete = () => setShowDeleteModal(true);
-  const handleDelete = () => {
-    handleCloseDelete();
-    toast.success('Xóa sản phẩm thành công', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+
+
+  const handleDelete = (productId) => {
+    // Gọi API xóa sản phẩm và sau đó xử lý kết quả
+    deleteProduct(productId)
+      .then(() => {
+        // Cập nhật lại danh sách sản phẩm sau khi xóa
+        setListProducts((prevList) => prevList.filter((product) => product.productID !== productId));
+  
+        // Thông báo thành công
+        toast.success('Xóa sản phẩm thành công', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        handleCloseDelete(); // Đóng modal
+      })
+      .catch((err) => {
+        toast.error('Xóa sản phẩm thất bại', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      });
   };
 
-  // Fetch data from category.json
-  useEffect(() => {
-    fetch('/category.json')
-      .then((response) => response.json())
-      .then((jsonData) => setData(jsonData))
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
+
+
+
 
   // Memoized columns
   const columns = useMemo(
     () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        size: 30,
-      },
-      {
-        accessorKey: 'name',
-        header: 'Product Name',
-        size: 200,
-      },
-      {
-        accessorKey: 'brand.name',
-        header: 'Brand Name',
-        size: 100,
-      },
-      {
-        accessorKey: 'variants',
-        header: 'Variants',
-        Cell: ({ cell }) => (
-          <ul>
-            {cell.getValue().map((variant, index) => (
-              <li key={index}>
-                {variant.color} - S: ${variant.sizes.s.price} / M: $
-                {variant.sizes.m.price} / L: ${variant.sizes.l.price}
-              </li>
-            ))}
-          </ul>
-        ),
-        size: 200,
-      },
-      {
-        accessorKey: 'stock',
-        header: 'Stock',
-        size: 50,
-      },
-      {
-        accessorKey: 'styles',
-        header: 'Styles',
-        size: 50,
-      },
       {
         header: 'View',
         Cell: ({ row }) => (
@@ -106,12 +104,34 @@ const ProductTable = () => {
           }}>
             <IoMdEye
               style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.5em' }}
-              onClick={() => handleShowDetail(row.original)}
+              onClick={() => handleShowDetail(row.original.productID)}
             />
           </div>
         ),
         size: 100,
       },
+      { accessorKey: 'name', header: 'Product Name', size: 200 },
+
+      { accessorKey: 'brand',
+        header: 'Brand Name', 
+        size: 100,
+        Cell: ({ row }) => {
+          // Tìm thương hiệu dựa trên brandID
+          const { brandName } = row.original.brands; // Truy xuất tên thương hiệu từ `brands`
+          return brandName || 'Unknown'; 
+        }
+
+      },
+
+      { accessorKey: 'formattedPrice', 
+        header: 'Price', 
+        size: 50 ,
+        Cell: ({ row }) => {
+          const price = row.original.formattedPrice || 0;
+          return `${(price)} đ`;
+        }
+      },
+      { accessorKey: 'stock', header: 'Stock', size: 50 },
       {
         header: 'Actions',
         Cell: ({ row }) => (
@@ -134,10 +154,10 @@ const ProductTable = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data,
+    data : listProducts,
     enableRowSelection: true,
     positionToolbarAlertBanner: "top",
-    initialState: { pagination: { pageSize: 10, pageIndex: 0 } },
+    initialState: { pagination: { pageSize: 5, pageIndex: 0 } },
   });
 
   return (
@@ -167,9 +187,9 @@ const ProductTable = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Toastify Notification */}
+
       <ToastContainer
-        style={{ zIndex: 1500 }} // Higher z-index for ToastContainer
+        style={{ zIndex: 1500 }} 
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
