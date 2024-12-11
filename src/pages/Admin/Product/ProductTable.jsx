@@ -23,9 +23,7 @@ const [selectedProduct, setSelectedProduct] = useState(null);
 const [showDetailModal, setShowDetailModal] = useState(false);
 
 useEffect(() => {
-  getProducts().then((res) => {
-
-    
+  getProducts().then((res) => {    
   setListProducts(res.data);
   });
 
@@ -51,12 +49,10 @@ useEffect(() => {
   const handleShowDelete = () => setShowDeleteModal(true);
 
 
-  const handleDelete = (productId) => {
-    // Gọi API xóa sản phẩm và sau đó xử lý kết quả
-    deleteProduct(productId)
+  const handleDelete = (productID) => {
+    deleteProduct(productID)
       .then(() => {
-        // Cập nhật lại danh sách sản phẩm sau khi xóa
-        setListProducts((prevList) => prevList.filter((product) => product.productID !== productId));
+        setListProducts((prevList) => prevList.filter((product) => product.productID !== productID));
   
         // Thông báo thành công
         toast.success('Xóa sản phẩm thành công', {

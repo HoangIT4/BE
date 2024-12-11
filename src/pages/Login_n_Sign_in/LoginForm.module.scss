@@ -1,0 +1,119 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Padding for mobile */
+}
+
+.login-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%; /* Full width */
+}
+
+.login-header h2 {
+  font-size: 24px;
+  margin: 0 20px;
+  cursor: pointer;
+  color: #ccc;
+  font-weight: normal;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 10px;
+}
+.login-option {
+  margin-bottom: 0px;
+}
+.login-header h2.active {
+  color: black;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.login-form,
+.register-form {
+  width: 100%; /* Ensure full width on mobile */
+  max-width: 300px; /* Limit max width */
+  display: flex;
+  flex-direction: column;
+}
+
+.login-input,
+.register-input {
+  margin-bottom: 10px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-btn,
+.register-btn {
+  background-color: black;
+  color: white;
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.login-footer p,
+.register-footer p {
+  font-size: 14px;
+  margin: 0; /* Remove extra space */
+  text-align: center; /* Center-align for better readability */
+}
+
+.login-footer a,
+.register-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-footer a:hover,
+.register-footer a:hover {
+  text-decoration: underline;
+}
+.facebook-login {
+  display: inline-flex;
+  color: #4267B2;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .login-container {
+    padding-top: 60px;
+    justify-content: flex-start;
+    height: 80vh;
+  }
+
+  .login-header h2 {
+    font-size: 28px; /* Slightly reduced to improve mobile layout */
+  }
+
+  .login-input, .register-input {
+    font-size: 18px;
+  }
+
+  .login-footer p,
+  .register-footer p {
+    font-size: 16px; /* Medium font size for mobile */
+  }
+
+  .login-form,
+  .register-form {
+    margin-top: 10px;
+  }
+}

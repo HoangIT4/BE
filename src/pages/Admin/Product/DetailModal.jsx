@@ -2,6 +2,7 @@
 import React from "react";
 import { Modal, Button, Row, Col } from "react-bootstrap";
 import styles from "./DetailModal.module.scss"; // File CSS để tuỳ chỉnh thêm
+import { HOST_BE } from "../../../config/url";
 
 const DetailModal = ({ show, onClose, selectedProduct }) => {
   return (
@@ -17,7 +18,7 @@ const DetailModal = ({ show, onClose, selectedProduct }) => {
             <div className="text-center mb-4">
               {/* Ảnh chính */}
               <img 
-                src={selectedProduct.src} 
+                src={selectedProduct.src.startsWith("http") ? selectedProduct.src : `${HOST_BE}${selectedProduct.src}`}
                 alt={selectedProduct.name} 
                 style={{ maxWidth: "100%", height: "auto", borderRadius: "10px" }} 
               />
@@ -25,7 +26,7 @@ const DetailModal = ({ show, onClose, selectedProduct }) => {
               {/* Ảnh phụ */}
               <div className="mt-3">
                 <img 
-                  src={selectedProduct.preImg} 
+                  src={selectedProduct.preImg.startsWith("http") ? selectedProduct.preImg : `${HOST_BE}${selectedProduct.preImg}`}
                   alt={`${selectedProduct.name} - Thumbnail`} 
                   style={{ maxWidth: "150px", height: "auto", borderRadius: "5px", border: "1px solid #ddd" }} 
                 />

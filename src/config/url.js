@@ -1,0 +1,1 @@
+export const HOST_BE= "https://localhost:7015"

@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ButtonGroup, Button, Table } from 'react-bootstrap';
-import "react-icons/fa";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faFilter, faSort, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import ModalForm from '../../../components/ModalForm';
-import ContextMenu from '../../../components/ContextMenu'; // Import ContextMenu
- // Import CSS cho context menu
+import ContextMenu from '../../../components/ContextMenu';
+import { HOST_API } from '../../../config/url'; 
+import {createOrder, getOrder ,deleteOrder ,getOrderByID,updateOrder ,getOrderForAdmin} from '@/apis/orderService';
 
 const Order = () => {
-  document.title="Quản trị - Đơn hàng"
+  document.title = "Quản trị - Đơn hàng";
+
   const [showModal, setShowModal] = useState(false);
   const [orders, setOrders] = useState([]);
   const [newOrder, setNewOrder] = useState({
-    name: '',
-    products: '',
+    userID: '',
     address: '',
-    date: '',
-    status: '',
-    price: ''
+    phoneNumber: '',
+    paymentMethod: '',
+    orderItems: [],
   });
 
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
@@ -31,18 +31,27 @@ const Order = () => {
     setNewOrder({ ...newOrder, [e.target.name]: e.target.value });
   };
 
-  const handleAddOrder = () => {
-    setOrders([...orders, newOrder]);
-    setNewOrder({
-      name: '',
-      products: '',
-      address: '',
-      date: '',
-      status: '',
-      price: ''
-    });
-    handleCloseModal();
+
+
+
+
+  const handleAddOrder = async () => {
+    try {
+      const newOrderData = await createOrder(newOrder);
+      setOrders([...orders, newOrderData]);
+      setNewOrder({
+        userID: '',
+        address: '',
+        phoneNumber: '',
+        paymentMethod: '',
+        orderItems: [],
+      });
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
   };
+
 
   const handleRightClick = (e, index) => {
     e.preventDefault();
@@ -56,15 +65,32 @@ const Order = () => {
   };
 
   const handleExport = () => {
-    console.log("Export order:", selectedOrderIndex);
+    console.log("Export order:", orders[selectedOrderIndex]);
     handleCloseContextMenu();
   };
 
-  const handleDelete = () => {
-    const updatedOrders = orders.filter((_, index) => index !== selectedOrderIndex);
-    setOrders(updatedOrders);
+  const handleDelete = async () => {
+    try {
+      await deleteOrder(orders[selectedOrderIndex].orderID);
+      const updatedOrders = orders.filter((_, index) => index !== selectedOrderIndex);
+      setOrders(updatedOrders);
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
     handleCloseContextMenu();
   };
+
+
+  useEffect(()=>{
+    getOrderForAdmin().then((res) => {
+      console.log(res);
+      
+      setOrders(res.data);  // Sửa thành setOrders(res)
+    }).catch((error) => {
+      console.error("Error fetching orders:", error);
+    });
+  }, []);
+  
 
   return (
     <div className="container-fluid">
@@ -84,7 +110,6 @@ const Order = () => {
             <Button className="btn-primary" active>All</Button>
             <Button variant="outline-secondary">Unpaid</Button>
           </ButtonGroup>
-
           <ButtonGroup aria-label="Order Actions">
             <Button variant="outline-secondary">
               <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -108,29 +133,31 @@ const Order = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
-              <th>Products</th>
+              <th>User ID</th>
               <th>Address</th>
-              <th>Date</th>
+              <th>Phone Number</th>
+              <th>Payment Method</th>
               <th>Status</th>
-              <th>Price</th>
+              <th>Total Price</th>
+              <th>Create At</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan="7">No orders yet.</td>
+                <td colSpan="8">No orders yet.</td>
               </tr>
             ) : (
               orders.map((order, index) => (
-                <tr key={index} onContextMenu={(e) => handleRightClick(e, index)}>
-                  <td>{index + 1}</td>
-                  <td>{order.name}</td>
-                  <td>{order.products}</td>
+                <tr key={order.orderID} onContextMenu={(e) => handleRightClick(e, index)}>
+                  <td>{order.orderID}</td>
+                  <td>{order.userID}</td>
                   <td>{order.address}</td>
-                  <td>{order.date}</td>
-                  <td>{order.status}</td>
-                  <td>{order.price} đ</td>
+                  <td>{order.phoneNumber}</td>
+                  <td>{order.paymentMethod}</td>
+                  <td>{order.status === 0 ? 'Pending' : order.status === 1 ? 'Approved' : 'Canceled'}</td>
+                  <td>{order.totalPrice} đ</td>
+                  <td>{new Date(order.createAt).toLocaleString()}</td>
                 </tr>
               ))
             )}
