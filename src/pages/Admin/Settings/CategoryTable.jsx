@@ -65,7 +65,7 @@ const CategoryTable = () => {
               color="error"
               size="small"
               startIcon={<MdDelete />}
-              onClick={() => handleDelete(row.original.id)}
+              onClick={() => handleDelete(row.original.categoryID)}
             >
               Delete
             </Button>
@@ -79,10 +79,10 @@ const CategoryTable = () => {
   // Handle create/edit
   const handleSave = (newData) => {
     if (editingRow) {
-      updateCategory(editingRow.brandID,newData)
+      updateCategory(editingRow.categoryID,newData)
         .then((res) => {
           setListCategories((prev) =>
-            prev.map((item) => (item.categoryIDID === editingRow.categoryID ? newData : item))
+            prev.map((item) => (item.categoryID === editingRow.categoryID ? newData : item))
           );
           toast.success('Cập nhật danh mục thành công', {
             position: 'top-right',

@@ -28,5 +28,9 @@ const deleteProduct = async (productID) =>{
   const res = await axiosClient.delete(`/Product/${productID}`)
   return res.data;
 }
+const updateProduct = async (productID, body) =>{
+  const res = await axiosClient.patch(`/Product/update/${productID}`, body)
+  return res.data;
+}
     
-export { getProducts,getProductById, addProduct, deleteProduct};
+export { getProducts,getProductById, addProduct, deleteProduct,updateProduct};

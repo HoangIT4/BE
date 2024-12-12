@@ -14,13 +14,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import {getProducts} from '@/apis/productsService';
 import {deleteProduct} from '@/apis/productsService';
 import {getProductById} from '@/apis/productsService';
+import { useNavigate } from 'react-router-dom';
 
 const ProductTable = () => {
 
+  const [listProducts, setListProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editedProduct, setEditedProduct] = useState({});
+  const navigate = useNavigate()
 
-const [listProducts,setListProducts] = useState([]);
-const [selectedProduct, setSelectedProduct] = useState(null);
-const [showDetailModal, setShowDetailModal] = useState(false);
+  const handleCloseDelete = () => setShowDeleteModal(false);
+  const handleShowDelete = () => setShowDeleteModal(true);
 
 useEffect(() => {
   getProducts().then((res) => {    
@@ -44,9 +51,13 @@ useEffect(() => {
     setSelectedProduct(null);
   };
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const handleCloseDelete = () => setShowDeleteModal(false);
-  const handleShowDelete = () => setShowDeleteModal(true);
+  const handleShowEdit = (productID) => {
+    // Chuyển hướng đến trang chỉnh sửa sản phẩm
+    navigate(`/admin/product/update/${productID}`);
+  }
+
+
+ 
 
 
   const handleDelete = (productID) => {
@@ -82,7 +93,6 @@ useEffect(() => {
         });
       });
   };
-
 
 
 
@@ -136,9 +146,11 @@ useEffect(() => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-            <FaPen style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em', marginRight: '10px'}} />
+            <FaPen style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em', marginRight: '10px'}} 
+              onClick={() => handleShowEdit(row.original.productID)}
+            />
             <MdDelete style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.5em' }}
-              onClick={handleShowDelete}
+              onClick={() => handleShowDelete(row.original.productID)}
             />
           </div>
         ),
@@ -167,6 +179,8 @@ useEffect(() => {
         style={{ zIndex: 1500 }} // Higher z-index for DetailModal
       />
 
+
+      
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={handleCloseDelete} style={{ zIndex: 1500 }}>
         <Modal.Header closeButton>

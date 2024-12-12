@@ -8,26 +8,27 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import 'react-toastify/dist/ReactToastify.css';
+import { getUserList } from '@/apis/userService';
 
 const UserTable = () => {
-  const dataUser =[
-    { id: 1, email: 'minhhoang2003bn@gmail.com', username: 'Phạm Minh Hoàng', createdAt: '2024-012-01' },
-    { id: 2, email: 'dung@gmail.com', username: 'Nguyễn Tiến Dũng', createdAt: '2024-012-02' },
-  ]
-  const [data, setData] = useState(dataUser);
+ 
+  const [listUser, setListUser] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Fetch data từ users.json
-  // useEffect(() => {
-  //   fetch('/users.json')
-  //     .then((response) => response.json())
-  //     .then((jsonData) => setData(jsonData))
-  //     .catch((error) => console.error('Error fetching user data:', error));
-  // }, []);
+  useEffect(() => {
+    getUserList().then((res) => {
+      console.log(res);
+      
+      const data = Array.isArray(res?.data) ? res.data : [];  // Nếu res.data không phải mảng, gán mảng rỗng
+      setListUser(data);
+    }).catch((error) => {
+      console.error('Lỗi khi lấy dữ liệu:', error);
+      setListUser([]);  // Gán mảng rỗng nếu có lỗi
+    });
+  }, []);
 
-  // Các cột của bảng
   const columns = useMemo(() => [
     {
       accessorKey: 'id',
@@ -35,7 +36,7 @@ const UserTable = () => {
       size: 30,
     },
     {
-      accessorKey: 'username',
+      accessorKey: 'userName',
       header: 'Name',
       size: 200,
     },
@@ -44,15 +45,20 @@ const UserTable = () => {
       header: 'Email',
       size: 200,
     },
-    // {
-    //   accessorKey: 'role',
-    //   header: 'Role',
-    //   size: 100,
-    // },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'Phone Number',
+      size: 150,
+    },
+    {
+      accessorKey: 'role',
+      header: 'Role',
+      size: 100,
+    },
     {
       header: 'View',
       Cell: ({ row }) => (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',width:'50px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '50px' }}>
           <IoMdEye
             style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.5em' }}
             onClick={() => handleShowDetail(row.original)}
@@ -64,7 +70,7 @@ const UserTable = () => {
       header: 'Actions',
       Cell: ({ row }) => (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginRight: '100px' }}>
-          <FaPen style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em',marginRight:'10px'}} />
+          <FaPen style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em', marginRight: '10px' }} />
           <MdDelete
             style={{ cursor: 'pointer', color: '#ff4d4f', fontSize: '1.5em' }}
             onClick={() => handleShowDelete(row.original)}
@@ -74,7 +80,6 @@ const UserTable = () => {
     },
   ], []);
 
-  // Hàm xử lý xem chi tiết
   const handleShowDetail = (user) => {
     setSelectedUser(user);
     setShowDetailModal(true);
@@ -85,7 +90,6 @@ const UserTable = () => {
     setSelectedUser(null);
   };
 
-  // Hàm xử lý xóa
   const handleShowDelete = (user) => {
     setSelectedUser(user);
     setShowDeleteModal(true);
@@ -94,7 +98,7 @@ const UserTable = () => {
   const handleCloseDelete = () => setShowDeleteModal(false);
 
   const handleDelete = () => {
-    setData((prev) => prev.filter((user) => user.id !== selectedUser.id));
+    setListUser((prev) => prev.filter((user) => user.id !== selectedUser.id));
     setShowDeleteModal(false);
     setSelectedUser(null);
 
@@ -110,7 +114,7 @@ const UserTable = () => {
   return (
     <>
       <MaterialReactTable
-        data={data}
+        data={listUser && Array.isArray(listUser) ? listUser : []}
         columns={columns}
         enableRowSelection={false}
         initialState={{ pagination: { pageSize: 5, pageIndex: 0 } }}
@@ -129,7 +133,7 @@ const UserTable = () => {
           <Modal.Title>Xác nhận xóa</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Bạn có muốn xóa người dùng <strong>{selectedUser?.name}</strong> không?
+          Bạn có muốn xóa người dùng <strong>{selectedUser?.userName}</strong> không?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDelete}>

@@ -26,9 +26,7 @@ const AddProduct = () => {
   const [listCategories, setListCategories] = useState([]);
 
   useEffect(() => {
-    // getProducts().then((res) => {
-    //   setListProducts(res.data);
-    // });
+   
 
     getBrands().then((res) => {
       setListBrands(res.data);

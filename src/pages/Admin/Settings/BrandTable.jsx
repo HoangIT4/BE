@@ -78,9 +78,30 @@ const BrandTable = () => {
   );
 
   const handleSave = (newData) => {
+
+    const isBrandExist = listBrands.some(
+      (brand) => brand.brandName.toLowerCase() === newData.brandName.toLowerCase()
+    );
+
+    if (isBrandExist) {
+      toast.error('Tên thương hiệu đã tồn tại!', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+      return;
+    }
+    
     if (editingRow) {
       updateBrand(editingRow.brandID,newData)
         .then((res) => {
+          
           setListBrands((prev) =>
             prev.map((item) => (item.brandID === editingRow.brandID ? newData : item))
           );
@@ -115,7 +136,9 @@ const BrandTable = () => {
     else {
       addBrand(newData)
       .then((res) =>{
-        setListBrands((prev) => [...prev, { ...newData, brandID: Date.now().toString() }]);
+        getBrands().then((res) => {
+          setListBrands(res.data); // Ensure the brandID is correctly updated
+        });
         toast.success("Thêm thương hiệu thành công",{
           position: "top-right",
           autoClose: 2000,
