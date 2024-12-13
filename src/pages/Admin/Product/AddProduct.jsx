@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Button, Form, Col, Row } from "react-bootstrap";
-import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { addProduct } from "@/apis/productsService";
 
-import { getBrands } from '@/apis/brandsService';
-import { getCategories } from '@/apis/categoryService'
+import { getBrands } from "@/apis/brandsService";
+import { getCategories } from "@/apis/categoryService";
 
 const AddProduct = () => {
   // Khai báo navigate để điều hướng
@@ -26,8 +26,6 @@ const AddProduct = () => {
   const [listCategories, setListCategories] = useState([]);
 
   useEffect(() => {
-   
-
     getBrands().then((res) => {
       setListBrands(res.data);
     });
@@ -38,8 +36,6 @@ const AddProduct = () => {
       setListCategories(res.data);
     });
   }, []);
-
-
 
   const [productData, setProductData] = useState({
     name: "",
@@ -62,19 +58,16 @@ const AddProduct = () => {
     ],
   });
 
-
-
   const handleBack = () => {
     navigate("/admin/product");
-
   };
   // Hàm xử lý khi nhấn nút thêm sản phẩm
   const handleAddProduct = (e) => {
     e.preventDefault();
     addProduct(productData)
       .then((res) => {
-        if(res.success){
-          toast.success('Thêm sản phẩm thành công!', {
+        if (res.success) {
+          toast.success("Thêm sản phẩm thành công!", {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -84,15 +77,18 @@ const AddProduct = () => {
             progress: undefined,
             theme: "light",
             transition: Bounce,
-  
           });
           navigate("/admin/product");
+        } else {
+          // Hiển thị thông báo lỗi từ phản hồi
+          toast.error(`Thêm sản phẩm thất bại: ${res.message}`);
         }
-        else{
-          toast.error('Thêm sản phẩm thất bại!');
-        }
-
       })
+      .catch((error) => {
+        // Xử lý lỗi khi gọi API
+        console.error("Đã xảy ra lỗi khi thêm sản phẩm:", error?.response?.data?.message);
+        alert(error?.response?.data?.message);
+      });
   };
 
   // Hàm để xử lý thay đổi giá trị các trường input
@@ -102,7 +98,9 @@ const AddProduct = () => {
       const field = name.split(".")[1];
       setProductData((prev) => ({
         ...prev,
-        productDetailsRequest: [{ ...prev.productDetailsRequest[0], [field]: value }],
+        productDetailsRequest: [
+          { ...prev.productDetailsRequest[0], [field]: value },
+        ],
       }));
     } else {
       setProductData({ ...productData, [name]: value });
@@ -137,9 +135,6 @@ const AddProduct = () => {
       }));
     }
   };
-
-
-
 
   return (
     <>
@@ -210,18 +205,25 @@ const AddProduct = () => {
             <Form.Control type="file" />
           </Form.Group>
 
-
-          <h5 style={{ paddingBottom: '10px', paddingTop: '20px' }}>Description</h5>
+          <h5 style={{ paddingBottom: "10px", paddingTop: "20px" }}>
+            Description
+          </h5>
           <div>Title description</div>
           <div className="input-group">
-            <textarea className="form-control" aria-label="With textarea"></textarea>
+            <textarea
+              className="form-control"
+              aria-label="With textarea"
+            ></textarea>
           </div>
 
-          <div style={{ paddingTop: '20px' }}>Detail description</div>
-          <div className="input-group" style={{ paddingBottom: '20px' }}>
-            <textarea className="form-control" style={{ height: '200px' }} aria-label="With textarea"></textarea>
+          <div style={{ paddingTop: "20px" }}>Detail description</div>
+          <div className="input-group" style={{ paddingBottom: "20px" }}>
+            <textarea
+              className="form-control"
+              style={{ height: "200px" }}
+              aria-label="With textarea"
+            ></textarea>
           </div>
-
 
           <Form.Group className="mb-3" controlId="stock">
             <Form.Label>Stock</Form.Label>
@@ -264,7 +266,13 @@ const AddProduct = () => {
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Category</Form.Label>
             <DropdownButton id="dropdown-basic-button" title="Chọn danh mục">
-              <div style={{ padding: "10px", maxHeight: "800px", overflowY: "auto" }}>
+              <div
+                style={{
+                  padding: "10px",
+                  maxHeight: "800px",
+                  overflowY: "auto",
+                }}
+              >
                 {listCategories.map((category) => (
                   <Form.Check
                     name="categoryIDs"
@@ -272,7 +280,9 @@ const AddProduct = () => {
                     type="checkbox"
                     label={category.categoryName}
                     value={category.categoryID}
-                    checked={productData.categoryIDs.includes(category.categoryID)}
+                    checked={productData.categoryIDs.includes(
+                      category.categoryID
+                    )}
                     onChange={handleCheckboxChange}
                   />
                 ))}
@@ -302,23 +312,25 @@ const AddProduct = () => {
             />
           </Form.Group>
 
-
           <div className="mt-3">
-            <Button onClick={handleShow} variant="secondary" className="me-2 mb-2">
+            <Button
+              onClick={handleShow}
+              variant="secondary"
+              className="me-2 mb-2"
+            >
               Hủy
             </Button>
             <Button
               onClick={handleAddProduct}
-              variant="primary" type="submit" className="mb-2">
+              variant="primary"
+              type="submit"
+              className="mb-2"
+            >
               Thêm Sản Phẩm
             </Button>
           </div>
-
-
-
         </Form>
       </div>
-
 
       {/* Modal confirmation */}
       <Modal show={show} onHide={handleClose}>

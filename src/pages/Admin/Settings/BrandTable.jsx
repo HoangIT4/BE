@@ -1,5 +1,4 @@
 import React, { useState,useEffect, useMemo } from 'react';
-
 import { MaterialReactTable } from 'material-react-table';
 import { Button } from '@mui/material';
 import { MdDelete, MdEdit } from 'react-icons/md';
@@ -8,8 +7,6 @@ import { getBrands , addBrand,updateBrand,deleteBrand } from '@/apis/brandsServi
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 
 
 const BrandTable = () => {
@@ -22,8 +19,6 @@ const BrandTable = () => {
     getBrands().then((res) => {
       setListBrands(res.data);
     });
-
-
   }, []);
 
 
@@ -82,6 +77,7 @@ const BrandTable = () => {
     const isBrandExist = listBrands.some(
       (brand) => brand.brandName.toLowerCase() === newData.brandName.toLowerCase()
     );
+    
 
     if (isBrandExist) {
       toast.error('Tên thương hiệu đã tồn tại!', {
@@ -101,10 +97,10 @@ const BrandTable = () => {
     if (editingRow) {
       updateBrand(editingRow.brandID,newData)
         .then((res) => {
-          
           setListBrands((prev) =>
-            prev.map((item) => (item.brandID === editingRow.brandID ? newData : item))
+            prev.map((item) => (item.brandID === editingRow.brandID ? { ...item, brandName: newData.brandName } : item))
           );
+         
           toast.success('Cập nhật thương hiệu thành công', {
             position: 'top-right',
             autoClose: 2000,

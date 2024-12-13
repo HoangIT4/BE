@@ -29,7 +29,11 @@ const deleteProduct = async (productID) =>{
   return res.data;
 }
 const updateProduct = async (productID, body) =>{
-  const res = await axiosClient.patch(`/Product/update/${productID}`, body)
+  const res = await axiosClient.patch(`/Product/update/${productID}`, body, { 
+    headers: {
+    'Content-Type': 'multipart/form-data', // Ensure content type is multipart/form-data
+  },
+ })
   return res.data;
 }
     

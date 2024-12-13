@@ -11,37 +11,25 @@ import DetailModal from './DetailModal';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {getProducts} from '@/apis/productsService';
-import {deleteProduct} from '@/apis/productsService';
-import {getProductById} from '@/apis/productsService';
+import { getProducts, deleteProduct, getProductById } from '@/apis/productsService';
 import { useNavigate } from 'react-router-dom';
 
 const ProductTable = () => {
-
   const [listProducts, setListProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [editedProduct, setEditedProduct] = useState({});
-  const navigate = useNavigate()
+  const [productToDelete, setProductToDelete] = useState(null);
+  const navigate = useNavigate();
 
-  const handleCloseDelete = () => setShowDeleteModal(false);
-  const handleShowDelete = () => setShowDeleteModal(true);
+  useEffect(() => {
+    getProducts().then((res) => {    
+      setListProducts(res.data);
+    });
+  }, []);
 
-useEffect(() => {
-  getProducts().then((res) => {    
-  setListProducts(res.data);
-  });
-
-}, []);
-
-
-  
   const handleShowDetail = async (productID) => {
     const productData = await getProductById(productID);
-
-    
     setSelectedProduct(productData);
     setShowDetailModal(true);
   };
@@ -51,21 +39,29 @@ useEffect(() => {
     setSelectedProduct(null);
   };
 
+  const handleShowDelete = (productID) => {
+    setProductToDelete(productID);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDelete = () => {
+    setShowDeleteModal(false);
+    setProductToDelete(null);
+  };
+
   const handleShowEdit = (productID) => {
-    // Chuyển hướng đến trang chỉnh sửa sản phẩm
     navigate(`/admin/product/update/${productID}`);
-  }
+  };
 
+  const handleDelete = () => {
+    if (!productToDelete) return;
 
- 
-
-
-  const handleDelete = (productID) => {
-    deleteProduct(productID)
+    deleteProduct(productToDelete)
       .then(() => {
-        setListProducts((prevList) => prevList.filter((product) => product.productID !== productID));
-  
-        // Thông báo thành công
+        setListProducts((prevList) => 
+          prevList.filter((product) => product.productID !== productToDelete)
+        );
+
         toast.success('Xóa sản phẩm thành công', {
           position: "top-right",
           autoClose: 2000,
@@ -77,7 +73,7 @@ useEffect(() => {
           theme: "light",
           transition: Bounce,
         });
-        handleCloseDelete(); // Đóng modal
+        handleCloseDelete();
       })
       .catch((err) => {
         toast.error('Xóa sản phẩm thất bại', {
@@ -94,10 +90,6 @@ useEffect(() => {
       });
   };
 
-
-
-
-  // Memoized columns
   const columns = useMemo(
     () => [
       {
@@ -117,24 +109,22 @@ useEffect(() => {
         size: 100,
       },
       { accessorKey: 'name', header: 'Product Name', size: 200 },
-
-      { accessorKey: 'brand',
+      { 
+        accessorKey: 'brand',
         header: 'Brand Name', 
         size: 100,
         Cell: ({ row }) => {
-          // Tìm thương hiệu dựa trên brandID
-          const { brandName } = row.original.brands; // Truy xuất tên thương hiệu từ `brands`
+          const { brandName } = row.original.brands;
           return brandName || 'Unknown'; 
         }
-
       },
-
-      { accessorKey: 'formattedPrice', 
+      { 
+        accessorKey: 'formattedPrice', 
         header: 'Price', 
-        size: 50 ,
+        size: 50,
         Cell: ({ row }) => {
           const price = row.original.formattedPrice || 0;
-          return `${(price)} đ`;
+          return `${price} đ`;
         }
       },
       { accessorKey: 'stock', header: 'Stock', size: 50 },
@@ -146,10 +136,12 @@ useEffect(() => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-            <FaPen style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em', marginRight: '10px'}} 
+            <FaPen 
+              style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.2em', marginRight: '10px'}} 
               onClick={() => handleShowEdit(row.original.productID)}
             />
-            <MdDelete style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.5em' }}
+            <MdDelete 
+              style={{ cursor: 'pointer', color: '#007bff', fontSize: '1.5em' }}
               onClick={() => handleShowDelete(row.original.productID)}
             />
           </div>
@@ -162,7 +154,7 @@ useEffect(() => {
 
   const table = useMaterialReactTable({
     columns,
-    data : listProducts,
+    data: listProducts,
     enableRowSelection: true,
     positionToolbarAlertBanner: "top",
     initialState: { pagination: { pageSize: 5, pageIndex: 0 } },
@@ -176,12 +168,9 @@ useEffect(() => {
         show={showDetailModal}
         onClose={handleCloseDetail}
         selectedProduct={selectedProduct}
-        style={{ zIndex: 1500 }} // Higher z-index for DetailModal
+        style={{ zIndex: 1500 }}
       />
 
-
-      
-      {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={handleCloseDelete} style={{ zIndex: 1500 }}>
         <Modal.Header closeButton>
           <Modal.Title>Xác nhận</Modal.Title>
@@ -196,7 +185,6 @@ useEffect(() => {
           </Button>
         </Modal.Footer>
       </Modal>
-
 
       <ToastContainer
         style={{ zIndex: 1500 }} 

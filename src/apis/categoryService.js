@@ -14,11 +14,11 @@ const addCategory = async (data) =>{
     return res.data;
 }
 const updateCategory = async (categoryID,body) =>{
-    const res = await axiosClient.patch(`/Brand/${categoryID}`,body);
+    const res = await axiosClient.patch(`/Category/${categoryID}`,body);
     return res.data;
 }
 const deleteCategory = async (categoryID) =>{
-    const res = await axiosClient.delete(`/Brand/${categoryID}`);
+    const res = await axiosClient.delete(`/Category/${categoryID}`);
     return res.data;
 }
 

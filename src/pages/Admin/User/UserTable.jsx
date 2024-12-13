@@ -21,12 +21,8 @@ const UserTable = () => {
     getUserList().then((res) => {
       console.log(res);
       
-      const data = Array.isArray(res?.data) ? res.data : [];  // Nếu res.data không phải mảng, gán mảng rỗng
-      setListUser(data);
-    }).catch((error) => {
-      console.error('Lỗi khi lấy dữ liệu:', error);
-      setListUser([]);  // Gán mảng rỗng nếu có lỗi
-    });
+      setListUser(res);
+    })
   }, []);
 
   const columns = useMemo(() => [
@@ -49,11 +45,6 @@ const UserTable = () => {
       accessorKey: 'phoneNumber',
       header: 'Phone Number',
       size: 150,
-    },
-    {
-      accessorKey: 'role',
-      header: 'Role',
-      size: 100,
     },
     {
       header: 'View',
